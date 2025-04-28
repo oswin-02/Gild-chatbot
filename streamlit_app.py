@@ -64,63 +64,49 @@ def main():
     def generate_response(prompt):
         prompt = prompt.lower().strip()
 
-        # Keywords for each category
-        sectors = {
-            "defense": ["lockheed martin", "raytheon", "northrop", "general dynamics", "boeing", "huntington", "tdg", "curtiss", "l3harris", "axon"],
-            "technology": ["apple", "microsoft", "google", "meta", "nvidia", "oracle", "ibm", "amd", "intel", "salesforce"],
-            "agriculture": ["adm", "bunge", "deere", "cf industries", "mosaic", "fmc", "tyson", "corteva", "agco", "scotts"],
-            "oil and gas": ["exxon", "chevron", "conocophillips", "eog", "occidental", "hess", "devon", "kinder morgan"]
-        }
+        # Greeting / fallback
+        if re.search(r"\b(hi|hello|hey|what can you do|who are you|help)\b", prompt):
+            return ("Hello! 👋 I can explain the pages you see:\n"
+                    "- 2D Visualization of Word Embeddings\n"
+                    "- 3D Visualization of Word Embeddings\n"
+                    "- Skip-Gram Word2Vec: With and Without Stopwords\n"
+                    "- Comparison of Skip-gram and CBOW Word2Vec Models\n"
+                    "Ask me about any of these!")
 
-        # Project overview
-        if any(word in prompt for word in ["what is this project", "goal", "aim", "purpose"]):
-            return "The goal of this project is to find correlations between Ukraine-Russia war events and stock movements of specific companies to help predict future trends."
+        # 2D Visualization page
+        if "2d" in prompt or ("2d visualization" in prompt) or ("2d plot" in prompt):
+            return ("📊 **2D Visualization of Word Embeddings**:\n"
+                    "This page projects high-dimensional word vectors into two dimensions using **PCA** or **t-SNE**, "
+                    "so you can visually explore relationships between words. Closer words tend to have similar meanings!")
 
-        # Dataset explanation
-        elif "dataset" in prompt or "data" in prompt:
-            return ("We use data from two sources:\n"
-                    "- War-related news and timelines from reliable sources.\n"
-                    "- Stock prices of companies across four sectors: Defense, Technology, Agriculture, and Oil & Gas.")
+        # 3D Visualization page
+        if "3d" in prompt or ("3d visualization" in prompt) or ("3d plot" in prompt):
+            return ("📈 **3D Visualization of Word Embeddings**:\n"
+                    "Similar to the 2D version, but here the word vectors are projected into **three dimensions**, "
+                    "allowing you to rotate and interact with the embedding space more richly!")
 
-        # Sector/company detection
-        for sector, keywords in sectors.items():
-            if any(k in prompt for k in keywords) or sector in prompt:
-                return f"Our findings suggest that {sector.title()} sector stocks respond differently to war sentiment. Want to hear about the correlation?"
+        # Skip-gram Word2Vec: With and Without Stopwords
+        if "stopword" in prompt or "skip-gram with stopwords" in prompt or "skip-gram without stopwords" in prompt:
+            return ("🛑 **Skip-Gram Word2Vec: With and Without Stopwords**:\n"
+                    "This page trains two Skip-Gram Word2Vec models: one with stopwords included, and one without stopwords. "
+                    "It helps show how common words (like 'the', 'is') can influence the quality of the learned embeddings.")
 
-            # Sentiment analysis method
-            elif "sentiment" in prompt or "bert" in prompt:
-                return ("We use a fine-tuned DistilBERT model to classify sentiment of war-related news. "
-                        "This gives us a time-series of sentiment scores to correlate with stock price trends.")
+        # Comparison of Skip-gram and CBOW Word2Vec Models
+        if "cbow" in prompt or "skip-gram" in prompt or ("comparison" in prompt and "word2vec" in prompt):
+            return ("⚔️ **Comparison of Skip-gram and CBOW Word2Vec Models**:\n"
+                    "This page compares two training strategies:\n"
+                    "- **Skip-gram**: predicts context from a center word (good for rare words).\n"
+                    "- **CBOW**: predicts a center word from its context (faster for large corpora).\n"
+                    "You can see their differences by checking similar words and embedding vectors!")
 
-            # Correlation method
-            elif "correlation" in prompt or "relationship" in prompt:
-                return ("We compare sentiment trends with stock price trends using correlation analysis. "
-                        "This helps us see which sectors respond positively or negatively to changes in public sentiment.")
+        # If not recognized
+        return ("I'm not sure what you mean. 🤔\n"
+                "Try asking about:\n"
+                "- 2D Visualization\n"
+                "- 3D Visualization\n"
+                "- Skip-Gram With/Without Stopwords\n"
+                "- Comparison of Skip-gram and CBOW Models")
 
-            # Text processing method
-            elif "word cloud" in prompt or "text processing" in prompt or "cleaning" in prompt:
-                return ("We extract war-related content from PDFs using PyMuPDF, clean it with stopword and noise filtering, "
-                        "and visualize important terms using TF-IDF word clouds.")
-
-            # Prediction method
-            elif "predict" in prompt or "future" in prompt:
-                return ("Based on past sentiment-stock relationships, we explore how current sentiment may suggest potential movements "
-                        "in sectors like tech or oil.")
-
-            # Conclusion
-            elif "conclusion" in prompt or "result" in prompt:
-                return ("Our conclusion:\n"
-                        "- 📈 Tech stocks rise with positive sentiment.\n"
-                        "- 🛢️ Oil & Gas stocks tend to rise during negative sentiment.\n"
-                        "- 🚜 Agriculture and 🛡️ Defense show no consistent pattern.")
-
-            # Greetings or fallback
-            elif re.search(r"\b(hi|hello|hey|what can you do|who are you)\b", prompt):
-                return "Hi! I'm your Ukraine-Russia Stock Correlation Assistant. Ask me about stock sectors, sentiment analysis, or what we found in our project."
-
-            else:
-                return "Try asking about our sentiment method, stock sectors, dataset, or project findings!"
-            
     # Chat function section (timing included inside function)
     def chat(prompt: str):
         st_c_chat.chat_message("user",avatar=user_image).write(prompt)

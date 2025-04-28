@@ -1,4 +1,9 @@
 streamlit
+gensim
+plotly
+numpy
+nltk
+scikit-learn
 openai
 autogen-agentchat
 autogen-ext[openai]
